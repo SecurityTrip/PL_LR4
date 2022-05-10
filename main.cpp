@@ -172,7 +172,6 @@ std::istream& operator>>(std::istream & in, Time & T) {
     std::vector<int> tmp = split(in_str,delimiter);
 
     T = Time(tmp[0],tmp[1],tmp[2]);
-
 }
 
 Time Time::operator=(std::string& t) {
@@ -248,6 +247,10 @@ int main() {
             if(T1>=T2) {out_file << T1 << " >= " << T2 << std::endl; break;}
             if(T1<=T2) {out_file << T1 << " <= " << T2 << std::endl; break;}
             if(T1==T2) {out_file << T1 << " = " << T2 << std::endl; break;}
+            break;
+        }
+        default:{
+            out_file << "Unknown operation";
             break;
         }
     }
