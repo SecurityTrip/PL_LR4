@@ -2,11 +2,14 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <fstream>
+
 
 class Time{
 private:
     unsigned short int hour, minute, second;
     int seconds;
+    std::string timer;
 public:
     Time(){
         hour=0;
@@ -69,6 +72,16 @@ public:
         return Time(h,m,s);
     }
 
+    void rebuild_time(){
+        if(hour >= 12){
+            hour = hour - 12;
+            timer = "PM";
+        } else{
+            timer = "AM";
+        }
+
+    }
+
 
     friend std::ostream& operator<< (std::ostream&, const Time&);
     friend std::istream& operator>> (std::istream&, Time&);
@@ -126,16 +139,29 @@ bool operator>=(const Time &a, const Time &b) {
 }
 
 std::ostream& operator<< (std::ostream& out, const Time &T) {
-    if(T.hour<10) out << "0" << T.hour << ":";
-    else out << T.hour << ":";
+    if(T.timer.size() == 0 ) {
+        if (T.hour < 10) out << "0" << T.hour << ":";
+        else out << T.hour << ":";
 
-    if(T.minute<10) out << "0" << T.minute << ":";
-    else out << T.minute << ":";
+        if (T.minute < 10) out << "0" << T.minute << ":";
+        else out << T.minute << ":";
 
-    if(T.second<10) out << "0" << T.second;
-    else out << T.second;
+        if (T.second < 10) out << "0" << T.second;
+        else out << T.second;
 
-    return out;
+        return out;
+    } else{
+        if (T.hour < 10) out << "0" << T.hour << ":";
+        else out << T.hour << ":";
+
+        if (T.minute < 10) out << "0" << T.minute << ":";
+        else out << T.minute << ":";
+
+        if (T.second < 10) out << "0" << T.second;
+        else out << T.second << T.timer;
+
+        return out;
+    }
 }
 
 std::istream& operator>>(std::istream & in, Time & T) {
@@ -177,23 +203,55 @@ Time operator - (Time& T1, Time& T2){
 }
 
 
+
 int main() {
+    std::ifstream in_file;
+    in_file.open("input.txt");
+    Time T1,T2;
+    unsigned short int flag;
+    in_file >> flag;
+    in_file >> T1;
+    in_file >> T2;
+    in_file.close();
 
-    Time a;
-    int z = 9, x = 34, c = 57,v = 68;
-    Time q,w,e,r;
-    q = Time(z);
-    w = Time(z,x);
-    e = Time(z,x,c);
-    r = Time(z,x,v);
+    std::ofstream out_file;
+    out_file.open("output.txt");
+    switch(flag) {
+        case 1: {
+            Time tmp;
+            tmp = T1 + T2;
+            out_file << tmp;
+            break;
+        }
+        case 2: {
+            out_file << T1 - T2;
+            break;
+        }
+        case 3: {
+            out_file << T1 << " ";
+            T1.rebuild_time();
+            out_file << T1 << std::endl;
 
-    std::cout<<e;
-    int zxc;
-    std::cout << std::endl << e.time_to_seconds();
-
-
-    if(w<e) std::cout << "yes";
-
+            out_file << T2 << " ";
+            T2.rebuild_time();
+            out_file << T2 << std::endl;
+            break;
+        }
+        case 4: {
+            out_file << T1.time_to_seconds() << std::endl;
+            out_file << T2.time_to_seconds() << std::endl;
+            break;
+        }
+        case 5:{
+            if(T1>T2) {out_file << T1 << " > " << T2 << std::endl; break;}
+            if(T1<T2) {out_file << T1 << " < " << T2 << std::endl; break;}
+            if(T1>=T2) {out_file << T1 << " >= " << T2 << std::endl; break;}
+            if(T1<=T2) {out_file << T1 << " <= " << T2 << std::endl; break;}
+            if(T1==T2) {out_file << T1 << " = " << T2 << std::endl; break;}
+            break;
+        }
+    }
+    out_file.close();
 
     return 0;
 }
