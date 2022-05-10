@@ -48,8 +48,7 @@ public:
 
 };
 
-// for string delimiter
-std::vector<int> split (std::string s, std::string delimiter) {
+std::vector<int> split (const std::string& s, const std::string& delimiter) {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
     std::string token;
     std::vector<std::string> res;
@@ -62,8 +61,8 @@ std::vector<int> split (std::string s, std::string delimiter) {
 
     res.push_back (s.substr (pos_start));
     std::vector<int> tmp;
-    for(int i = 0; i< res.size();++i){
-        tmp.push_back(stoi(res[i]));
+    for(auto & re : res){
+        tmp.push_back(stoi(re));
     }
     return tmp;
 }
